@@ -1,0 +1,2 @@
+!test2%%%all%%%Ich bin die Response
+!testcmd%%%all%%%223 
