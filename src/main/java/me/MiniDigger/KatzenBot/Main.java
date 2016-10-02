@@ -23,6 +23,11 @@ public class Main {
             USER = args[0];
             PASS = args[1];
             CHAN = args[2];
+
+            if (!CHAN.startsWith("#")) {
+                CHAN = "#" + CHAN;
+                System.out.println("fixed channel name for you ;) (" + CHAN + ")");
+            }
         } else {
             System.err.println("usage: java -jar KatzenBot-jar-with-dependencies.jar <username> <oauth token> <channel>");
             System.out.println(Arrays.toString(args));
