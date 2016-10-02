@@ -25,6 +25,7 @@ public class Main {
             CHAN = args[2];
         } else {
             System.err.println("usage: java -jar KatzenBot-jar-with-dependencies.jar <username> <oauth token> <channel>");
+            System.out.println(Arrays.toString(args));
             return;
         }
 
