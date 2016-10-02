@@ -6,6 +6,7 @@ import org.pircbotx.exception.IrcException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -22,7 +23,18 @@ public class Main {
             USER = args[0];
             PASS = args[1];
             CHAN = args[2];
+        } else {
+            System.err.println("usage: java -jar KatzenBot-jar-with-dependencies.jar <username> <oauth token> <channel>");
+            return;
         }
+
+        if (USER.length() == 0 || PASS.length() == 0 || CHAN.length() == 0) {
+            System.err.println("usage: java -jar KatzenBot-jar-with-dependencies.jar <username> <oauth token> <channel>");
+            System.out.println("args can't be zero-length " + Arrays.toString(args));
+            return;
+        }
+
+        System.out.println("Starting IRC Client for user " + USER + " in channel " + CHAN);
 
         // irc client
         List<Configuration.ServerEntry> servers = new ArrayList<>();
