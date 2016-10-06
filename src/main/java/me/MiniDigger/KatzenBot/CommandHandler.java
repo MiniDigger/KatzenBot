@@ -28,7 +28,7 @@ public class CommandHandler {
 
         pokemonHandler = new PokemonHandler();
         pokemonHandler.init(this);
-        
+
         commands.add(new Command("!addcmd", "op", (label, args, channel, sender, event) -> {
             if (getCommand(args[1]).isPresent()) {
                 event.respond("Command already exists!");

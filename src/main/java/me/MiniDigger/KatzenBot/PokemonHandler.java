@@ -1,9 +1,15 @@
 package me.MiniDigger.KatzenBot;
 
+import org.apache.lucene.search.spell.PlainTextDictionary;
+import org.apache.lucene.search.spell.SpellChecker;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -20,8 +26,20 @@ public class PokemonHandler {
 
     private Set<String> pokemon = new HashSet<>();
     private List<PokemonEntry> list = new CopyOnWriteArrayList<>();
+    private boolean useSpellChecker = true;
+    private SpellChecker spellChecker;
 
     public void init(CommandHandler handler) {
+        try {
+            Directory directory = FSDirectory.open(new File("./spellchecker/"));
+            spellChecker = new SpellChecker(directory);
+            spellChecker.indexDictionary(new PlainTextDictionary(new File("pokemonlist.txt")));
+            System.out.println("Enabled spellchecker!");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            useSpellChecker = false;
+        }
+
         try (Scanner scan = new Scanner(new FileReader(new File("pokemonlist.txt")))) {
             while (scan.hasNext()) {
                 pokemon.add(scan.nextLine().toLowerCase());
@@ -46,6 +64,18 @@ public class PokemonHandler {
 
             if (!pokemon.contains(args[1].toLowerCase())) {
                 event.respond("Unbekanntes Pokemon!");
+                if (useSpellChecker) {
+                    try {
+                        String[] suggestions = spellChecker.suggestSimilar(args[1].toLowerCase(), 1);
+                        if (suggestions.length > 0) {
+                            event.respond("Meintest du " + suggestions[0] + "?");
+                        } else {
+                            System.out.println("no suggestions for " + args[1].toLowerCase());
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
                 return;
             }
 
