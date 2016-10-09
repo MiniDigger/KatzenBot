@@ -32,4 +32,22 @@ public class KatzenBotListener extends ListenerAdapter {
         System.err.println(event.getException().getMessage());
         event.getException().printStackTrace();
     }
+
+    // why the fuck do we get duplicated messages?!
+    public static KatzenBotListener instance = null;
+
+    public KatzenBotListener() {
+        if (instance != null) {
+            throw new WhatTheFuckException("DOUBLE LISTENERS?!");
+        }
+
+        instance = this;
+    }
+
+    class WhatTheFuckException extends RuntimeException {
+
+        public WhatTheFuckException(String s) {
+            super("u w00t m8? " + s);
+        }
+    }
 }

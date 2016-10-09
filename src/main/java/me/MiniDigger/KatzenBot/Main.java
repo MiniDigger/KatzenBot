@@ -52,7 +52,7 @@ public class Main {
                 .setRealName("KatzenBot made by MiniDigger")
                 .setAutoNickChange(true) //Automatically change nick when the current one is in use
                 .addAutoJoinChannel(CHAN) //Join #pircbotx channel on connect
-                .setAutoReconnect(true)
+                .setAutoReconnect(false)
                 .setServerPassword(PASS)
                 .setServers(servers)
                 .addListener(new KatzenBotListener())
