@@ -16,19 +16,19 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Created by Martin on 01.10.2016.
  */
 public class CommandHandler {
-
+    
     private List<Command> commands = new CopyOnWriteArrayList<>();
     private List<String> ops = new CopyOnWriteArrayList<>();
-
+    
     private PokemonHandler pokemonHandler;
-
+    
     public void initCommands() {
         loadOps();
         loadCommands();
-
+        
         pokemonHandler = new PokemonHandler();
         pokemonHandler.init(this);
-
+        
         commands.add(new Command("!addcmd", "op", (label, args, channel, sender, event) -> {
             if (getCommand(args[1]).isPresent()) {
                 event.respond("Command already exists!");
@@ -38,7 +38,7 @@ public class CommandHandler {
             event.respond("Command " + args[1] + " added");
             saveCommands();
         }));
-
+        
         commands.add(new Command("!remcmd", "op", (label, args, channel, sender, event) -> {
             Optional<Command> cmd = getCommand("!" + args[1]);
             if (cmd.isPresent()) {
@@ -47,20 +47,32 @@ public class CommandHandler {
                 saveCommands();
             }
         }));
-
+        
+        commands.add(new Command("!editcmd", "op", (label, args, channel, sender, event) -> {
+            Optional<Command> cmd = getCommand("!" + args[1]);
+            if (cmd.isPresent()) {
+                commands.remove(cmd.get());
+                event.respond("Command " + args[1] + " updated");
+            } else {
+                event.respond("Command " + args[1] + " added");
+            }
+            commands.add(new MemoryCommand("!" + args[1], "all", argsToString(args, 2)));
+            saveCommands();
+        }));
+        
         commands.add(new Command("!op", "op", (label, args, channel, sender, event) -> {
             ops.add(args[1].toLowerCase());
             event.respond("Oped " + args[1].toLowerCase() + "!");
             saveOps();
         }));
-
+        
         commands.add(new Command("!deop", "op", (label, args, channel, sender, event) -> {
             ops.remove(args[1].toLowerCase());
             event.respond("De-Oped " + args[1].toLowerCase() + "!");
             saveOps();
         }));
     }
-
+    
     public void saveOps() {
         try (PrintWriter writer = new PrintWriter(new FileWriter(new File("ops.txt")))) {
             ops.forEach(writer::println);
@@ -69,7 +81,7 @@ public class CommandHandler {
             ex.printStackTrace();
         }
     }
-
+    
     public void loadOps() {
         try (Scanner scan = new Scanner(new FileInputStream(new File("ops.txt")))) {
             while (scan.hasNext()) {
@@ -80,7 +92,7 @@ public class CommandHandler {
             ex.printStackTrace();
         }
     }
-
+    
     public void saveCommands() {
         try (PrintWriter writer = new PrintWriter(new FileWriter(new File("commands.txt")))) {
             commands.stream().filter(cmd -> cmd instanceof MemoryCommand).forEach(cmd -> {
@@ -92,7 +104,7 @@ public class CommandHandler {
             ex.printStackTrace();
         }
     }
-
+    
     public void loadCommands() {
         try (Scanner scan = new Scanner(new FileInputStream(new File("commands.txt")))) {
             while (scan.hasNext()) {
@@ -108,7 +120,7 @@ public class CommandHandler {
             ex.printStackTrace();
         }
     }
-
+    
     public void executeCommand(String label, String[] args, String sender, String channel, MessageEvent event) {
         commands.stream().filter(command -> command.command.equalsIgnoreCase(label)).forEach(command -> {
             if (command.role.equalsIgnoreCase("all") || (command.role.equalsIgnoreCase("op") && ops.contains(sender.toLowerCase()))) {
@@ -116,11 +128,11 @@ public class CommandHandler {
             }
         });
     }
-
+    
     private Optional<Command> getCommand(String label) {
         return commands.stream().filter(command -> command.command.equalsIgnoreCase(label)).findAny();
     }
-
+    
     private String argsToString(String[] args, int beginIndex) {
         StringBuilder sb = new StringBuilder();
         for (int i = beginIndex; i < args.length; i++) {
@@ -128,27 +140,27 @@ public class CommandHandler {
         }
         return sb.toString();
     }
-
+    
     public void add(Command all) {
         this.commands.add(all);
     }
-
+    
     static class Command {
         protected String command;
         protected String role;
         protected CommandExecutor executor;
-
+        
         public Command(String command, String role, CommandExecutor executor) {
             this.command = command;
             this.role = role;
             this.executor = executor;
         }
     }
-
+    
     class MemoryCommand extends Command {
-
+        
         private String response;
-
+        
         public MemoryCommand(String command, String role, String response) {
             super(command, role, null);
             this.executor = (label, args, sender, channel, event) -> {
@@ -156,13 +168,13 @@ public class CommandHandler {
             };
             this.response = response;
         }
-
+        
         public String constructResponse(String label, String[] args, String sender, String channel, MessageEvent event) {
             //TODO replace placeholders and shit
             return response;
         }
     }
-
+    
     interface CommandExecutor {
         public void execute(String label, String[] args, String sender, String channel, MessageEvent event);
     }
