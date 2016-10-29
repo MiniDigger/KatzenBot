@@ -199,7 +199,9 @@ public class CommandHandler {
     }
     
     public void add(Command all) {
-        this.commands.add(all);
+        if (!getCommand(all.command).isPresent()) {
+            this.commands.add(all);
+        }
     }
     
     static class Command {
