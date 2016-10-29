@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -19,6 +20,9 @@ public class CommandHandler {
     
     private List<Command> commands = new CopyOnWriteArrayList<>();
     private List<String> ops = new CopyOnWriteArrayList<>();
+    
+    private List<String> giveaway = new CopyOnWriteArrayList<>();
+    private boolean giveawayEnabled = false;
     
     private PokemonHandler pokemonHandler;
     
@@ -71,6 +75,59 @@ public class CommandHandler {
             event.respond("De-Oped " + args[1].toLowerCase() + "!");
             saveOps();
         }));
+        
+        commands.add(new Command("!giveaway", "all", ((label, args, sender, channel, event) -> {
+            if (!giveawayEnabled) {
+                event.respond("Zur Zeit läuft kein Giveaway OMGScoots");
+                return;
+            }
+            if (!giveaway.contains(sender)) {
+                giveaway.add(sender);
+                event.respond("Du bist dabei FutureMan");
+            }
+        })));
+        
+        commands.add(new Command("!giveawaystart", "op", ((label, args, sender, channel, event) -> {
+            giveawayEnabled = true;
+            giveaway.clear();
+            event.getBot().send().message(channel, "Giveway gestartet! Gebe !giveway ein um mitzumachen!");
+        })));
+        
+        commands.add(new Command("!giveawayend", "op", ((label, args, sender, channel, event) -> {
+            if (!giveawayEnabled) {
+                event.respond("Es läuft kein Giveaway du Idiot NotLikeThis");
+                return;
+            }
+            giveawayEnabled = false;
+            event.getBot().send().message(channel, "Giveaway zuende, ziehe Gewinner ResidentSleeper");
+            try {
+                Thread.sleep(10 * 1000);
+            } catch (InterruptedException ignored) {
+            }
+            
+            Collections.shuffle(giveaway);
+            String winner = giveaway.get(0);
+            
+            event.getBot().send().message(channel, "Winner gezogen!");
+            try {
+                Thread.sleep(2 * 1000);
+            } catch (InterruptedException ignored) {
+            }
+            
+            event.getBot().send().message(channel, "Es ist");
+            try {
+                Thread.sleep(2 * 1000);
+            } catch (InterruptedException ignored) {
+            }
+            
+            event.getBot().send().message(channel, " @" + winner + "!!! BloodTrail");
+            try {
+                Thread.sleep(2 * 1000);
+            } catch (InterruptedException ignored) {
+            }
+            
+            giveaway.clear();
+        })));
     }
     
     public void saveOps() {
