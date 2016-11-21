@@ -229,7 +229,7 @@ public class CommandHandler {
         }
         
         public String constructResponse(String label, String[] args, String sender, String channel, MessageEvent event) {
-            //TODO replace placeholders and shit
+            response = response.replace("%sender%", sender);
             return response;
         }
     }
