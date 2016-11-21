@@ -229,12 +229,13 @@ public class CommandHandler {
         }
         
         public String constructResponse(String label, String[] args, String sender, String channel, MessageEvent event) {
-            response = response.replace("%sender%", sender);
-            return response;
+            String resp = response;
+            resp = resp.replace("%sender%", sender);
+            return resp;
         }
     }
     
     interface CommandExecutor {
-        public void execute(String label, String[] args, String sender, String channel, MessageEvent event);
+        void execute(String label, String[] args, String sender, String channel, MessageEvent event);
     }
 }
