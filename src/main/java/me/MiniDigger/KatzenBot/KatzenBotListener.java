@@ -6,6 +6,8 @@ import org.pircbotx.hooks.events.ListenerExceptionEvent;
 import org.pircbotx.hooks.events.MessageEvent;
 
 /**
+ * Listener for IRC Handler
+ * Parse all incomming Messages and try to execute them in Command Handler
  * Created by Martin on 01.10.2016.
  */
 public class KatzenBotListener extends ListenerAdapter {

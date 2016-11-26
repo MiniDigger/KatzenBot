@@ -5,6 +5,8 @@ package me.MiniDigger.KatzenBot;
 import java.util.Arrays;
 
 /**
+ * Main Execution of KatzenBot
+ * Checks arguments and inits IRCHandler
  * Created by Martin on 01.10.2016.
  */
 public class Main {

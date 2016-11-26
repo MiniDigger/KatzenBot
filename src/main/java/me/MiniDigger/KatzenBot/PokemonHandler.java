@@ -20,6 +20,8 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
+ * Funcionality for Pokemon Commands
+ * Allows Users to request a pokemon to be named after them (or anything else)
  * Created by Martin on 01.10.2016.
  */
 public class PokemonHandler {

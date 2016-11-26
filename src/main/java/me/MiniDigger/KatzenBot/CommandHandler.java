@@ -14,6 +14,9 @@ import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
+ * Manager for all command Messages
+ * Add / Change / Delete Commands
+ * Run Giveaway
  * Created by Martin on 01.10.2016.
  */
 public class CommandHandler {

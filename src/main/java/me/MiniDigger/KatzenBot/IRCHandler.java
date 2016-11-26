@@ -1,8 +1,6 @@
 package me.MiniDigger.KatzenBot;
 
-/**
- * Created by firetailor on 26.11.2016.
- */
+
 
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
@@ -13,7 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
+/**
+ * Creates a connection to an IRC Server and set up a listener
+ * Created by firetailor on 26.11.2016.
+ */
 public class IRCHandler {
 
     String _serverHostname;
