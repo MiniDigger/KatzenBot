@@ -1,2 +1,4 @@
-.idea/uiDesigner.xml
+.idea/
 KatzenBot.iml
+spellchecker/
+target/
