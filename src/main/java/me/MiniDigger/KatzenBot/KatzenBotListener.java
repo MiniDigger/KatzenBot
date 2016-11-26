@@ -16,7 +16,7 @@ public class KatzenBotListener extends ListenerAdapter {
 
     @Override
     public void onConnect(ConnectEvent event) throws Exception {
-        event.getBot().send().message(Main.CHAN, "Hello World! I'm KatzenBot!");
+        event.getBot().send().message(Main.CHAN, "HeyGuys");
         commandHandler.initCommands();
     }
 
