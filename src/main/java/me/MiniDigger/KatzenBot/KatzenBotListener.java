@@ -14,7 +14,7 @@ public class KatzenBotListener extends ListenerAdapter {
 
     @Override
     public void onConnect(ConnectEvent event) throws Exception {
-        event.getBot().send().message(Main.CHAN, "HeyGuys");
+        event.getBot().send().message(Main.CHAN, "Hello World! I'm KatzenBot made by MiniDigger.");
         commandHandler.initCommands();
     }
 
@@ -33,21 +33,18 @@ public class KatzenBotListener extends ListenerAdapter {
         event.getException().printStackTrace();
     }
 
-    // why the fuck do we get duplicated messages?!
+    // Setting instance to zero to prevent cloned messages
     public static KatzenBotListener instance = null;
 
     public KatzenBotListener() {
-        if (instance != null) {
-            throw new WhatTheFuckException("DOUBLE LISTENERS?!");
-        }
-
+        if (instance != null) throw new KatzenBotException("Object already exists");
         instance = this;
     }
 
-    class WhatTheFuckException extends RuntimeException {
+    class KatzenBotException extends RuntimeException {
 
-        public WhatTheFuckException(String s) {
-            super("u w00t m8? " + s);
+        public KatzenBotException(String s) {
+            super("Meow? " + s);
         }
     }
 }
