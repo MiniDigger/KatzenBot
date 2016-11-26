@@ -1,13 +1,8 @@
 package me.MiniDigger.KatzenBot;
 
-import org.pircbotx.Configuration;
-import org.pircbotx.PircBotX;
-import org.pircbotx.exception.IrcException;
 
-import java.io.IOException;
-import java.util.ArrayList;
+
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by Martin on 01.10.2016.
@@ -19,21 +14,26 @@ public class Main {
     public static String CHAN = "";
 
     public static void main(String[] args) {
+
+        //Check for Argument existance. Exit if unexpected number of Arguments.
         if (args.length == 3) {
             USER = args[0];
             PASS = args[1];
             CHAN = args[2];
 
+            //Add # on the beginning of the Channel name if not existant.
             if (!CHAN.startsWith("#")) {
                 CHAN = "#" + CHAN;
                 System.out.println("fixed channel name for you ;) (" + CHAN + ")");
             }
         } else {
+            System.err.println("Got unexpected number of Arguments");
             System.err.println("usage: java -jar KatzenBot-jar-with-dependencies.jar <username> <oauth token> <channel>");
             System.out.println(Arrays.toString(args));
             return;
         }
 
+        //Check Argument length. Exit on length == 0
         if (USER.length() == 0 || PASS.length() == 0 || CHAN.length() == 0) {
             System.err.println("usage: java -jar KatzenBot-jar-with-dependencies.jar <username> <oauth token> <channel>");
             System.out.println("args can't be zero-length " + Arrays.toString(args));
@@ -42,27 +42,7 @@ public class Main {
 
         System.out.println("Starting IRC Client for user " + USER + " in channel " + CHAN);
 
-        // irc client
-        List<Configuration.ServerEntry> servers = new ArrayList<>();
-        servers.add(new Configuration.ServerEntry("irc.chat.twitch.tv", 6667));
-
-        Configuration config = new Configuration.Builder()
-                .setName(USER) //Nick of the bot. CHANGE IN YOUR CODE
-                .setLogin(USER) //Login part of hostmask, eg name:login@host
-                .setRealName("KatzenBot made by MiniDigger")
-                .setAutoNickChange(true) //Automatically change nick when the current one is in use
-                .addAutoJoinChannel(CHAN) //Join #pircbotx channel on connect
-                .setAutoReconnect(false)
-                .setServerPassword(PASS)
-                .setServers(servers)
-                .addListener(new KatzenBotListener())
-                .buildConfiguration(); //Create an immutable configuration from this builder
-
-        PircBotX myBot = new PircBotX(config);
-        try {
-            myBot.startBot();
-        } catch (IOException | IrcException e) {
-            e.printStackTrace();
-        }
+        IRCHandler ircHandlerObj = new IRCHandler("irc.chat.twitch.tv", 6667 ,USER, PASS, CHAN);
+        ircHandlerObj.Execute(ircHandlerObj.GetConfig());
     }
 }
