@@ -22,6 +22,7 @@ public class IRCHandler {
     String _user;
     String _pass;
     String _chan;
+    Configuration _configuration;
 
     List<Configuration.ServerEntry> _serverList;
 
@@ -39,7 +40,11 @@ public class IRCHandler {
 
     }
 
-    public Configuration GetConfig(){
+    /**
+     * Generate Configuration
+     * To be called before Execute()
+     */
+    public void Configure(){
 
         _serverList.add(new Configuration.ServerEntry(_serverHostname, _serverPort));
 
@@ -55,16 +60,28 @@ public class IRCHandler {
                 .addListener(new KatzenBotListener())
                 .buildConfiguration(); //Create an immutable configuration from this builder
 
-        return config;
+        _configuration = config;
     }
 
-    public void Execute(Configuration configuration){
-        PircBotX myBot = new PircBotX(configuration);
+    /**
+     * Execute IRC Client.
+     * If not yet done will call Configure to get connection information
+     */
+    public void Execute(){
 
-        try {
-            myBot.startBot();
-        } catch (IOException | IrcException e) {
-            e.printStackTrace();
+        if(null != _configuration){
+            PircBotX myBot = new PircBotX(_configuration);
+
+            try {
+                myBot.startBot();
+            } catch (IOException | IrcException e) {
+                e.printStackTrace();
+            }
         }
+        else{
+            Configure();
+            Execute();
+        }
+
     }
 }

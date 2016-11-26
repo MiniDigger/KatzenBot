@@ -55,6 +55,6 @@ public class Main {
         System.out.println("Starting IRC Client for user " + USER + " in channel " + CHAN + " on Server " + HOSTNAME + ":" + PORT);
 
         IRCHandler ircHandlerObj = new IRCHandler(HOSTNAME, PORT,USER, PASS, CHAN);
-        ircHandlerObj.Execute(ircHandlerObj.GetConfig());
+        ircHandlerObj.Execute();
     }
 }
