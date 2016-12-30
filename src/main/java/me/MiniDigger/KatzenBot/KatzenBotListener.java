@@ -26,6 +26,15 @@ public class KatzenBotListener extends ListenerAdapter {
         String label = args[0];
         String channel = event.getChannel().getName();
         String sender = event.getUser().getNick();
+
+        /*
+        call Moderator
+        Moderator modObj = new Moderator();
+        if(modObj.isMessageValid(event) != Moderator.MessageState.valid){
+            //punish user
+        }
+        */
+
         commandHandler.executeCommand(label, args, sender, channel, event);
     }
 
