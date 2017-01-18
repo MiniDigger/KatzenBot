@@ -27,13 +27,12 @@ public class KatzenBotListener extends ListenerAdapter {
         String channel = event.getChannel().getName();
         String sender = event.getUser().getNick();
 
-        /*
-        call Moderator
+
         Moderator modObj = new Moderator();
         if(modObj.isMessageValid(event) != Moderator.MessageState.valid){
-            //punish user
+            event.getBot().send().message(Main.CHAN, "/timeout "+ event.getUser() + "1");
         }
-        */
+
 
         commandHandler.executeCommand(label, args, sender, channel, event);
     }

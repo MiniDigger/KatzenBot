@@ -9,16 +9,17 @@ import org.pircbotx.hooks.events.MessageEvent;
 
 
 public class Moderator {
+    private float messageIsSpamPercentage = 0.05F;
+
     public enum MessageState{
         valid, caps, blacklist
-
     }
 
     public MessageState isMessageValid(MessageEvent Message) {
         MessageState messageStateObj = MessageState.valid;
         String message = Message.getMessage();
 
-        if (getNumberOfCapitalLetters(message) > (message.length() * 0.05)) {
+        if (getNumberOfCapitalLetters(message) > (message.length() * messageIsSpamPercentage)) {
             messageStateObj = MessageState.caps;
         } else if (checkForBlacklistedWords(message)) {
             messageStateObj = MessageState.blacklist;
@@ -28,8 +29,8 @@ public class Moderator {
     }
 
 
-    private int getNumberOfCapitalLetters(String input){
-        Integer numberOfCapsLetters = 0;
+    private int getNumberOfCapitalLetters(String message){
+        int numberOfCapsLetters = 0;
         for (int k = 0; k < message.length(); k++) {
             if (Character.isUpperCase(message.charAt(k))) numberOfCapsLetters++;
         }
