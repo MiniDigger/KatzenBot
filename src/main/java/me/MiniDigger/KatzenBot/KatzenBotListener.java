@@ -20,6 +20,7 @@ public class KatzenBotListener extends ListenerAdapter {
         commandHandler.initCommands();
     }
 
+
     @Override
     public void onMessage(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
@@ -27,15 +28,18 @@ public class KatzenBotListener extends ListenerAdapter {
         String channel = event.getChannel().getName();
         String sender = event.getUser().getNick();
 
-
         Moderator modObj = new Moderator();
-        if(modObj.isMessageValid(event) != Moderator.MessageState.valid){
-            event.getBot().send().message(Main.CHAN, "/timeout "+ event.getUser() + "1");
+        Moderator.MessageState state = modObj.isMessageValid(event);
+
+        if (state == Moderator.MessageState.blacklist) {
+            event.getBot().send().message(Main.CHAN, "/timeout " + event.getUser().getNick() + " 1");
+            event.getBot().send().message(Main.CHAN, "@" + event.getUser().getNick() + " your message contained a blacklisted Word.");
+        } else if (state == Moderator.MessageState.caps) {
+            event.getBot().send().message(Main.CHAN, "/timeout " + event.getUser().getNick() + " 1");
+            event.getBot().send().message(Main.CHAN, "@" + event.getUser().getNick() + " please do not use so many capital letters.");
         }
-
-
-        commandHandler.executeCommand(label, args, sender, channel, event);
     }
+        commandHandler.executeCommand(label, args, sender, channel, event);
 
     @Override
     public void onListenerException(ListenerExceptionEvent event) throws Exception {
