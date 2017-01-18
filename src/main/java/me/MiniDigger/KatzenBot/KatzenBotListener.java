@@ -38,8 +38,10 @@ public class KatzenBotListener extends ListenerAdapter {
             event.getBot().send().message(Main.CHAN, "/timeout " + event.getUser().getNick() + " 1");
             event.getBot().send().message(Main.CHAN, "@" + event.getUser().getNick() + " please do not use so many capital letters.");
         }
-    }
+
         commandHandler.executeCommand(label, args, sender, channel, event);
+    }
+
 
     @Override
     public void onListenerException(ListenerExceptionEvent event) throws Exception {
