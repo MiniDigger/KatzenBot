@@ -1,7 +1,6 @@
 package me.MiniDigger.KatzenBot;
 
 
-
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 import org.pircbotx.exception.IrcException;
@@ -27,8 +26,7 @@ public class IRCHandler {
 
     List<Configuration.ServerEntry> _serverList;
 
-    public IRCHandler(String serverHostname, Integer serverPort, String botUserName, String botAuthKey, String targetChannelName)
-    {
+    public IRCHandler(String serverHostname, Integer serverPort, String botUserName, String botAuthKey, String targetChannelName) {
         _serverHostname = serverHostname;
         _serverPort = serverPort;
 
@@ -45,7 +43,7 @@ public class IRCHandler {
      * Generate Configuration
      * To be called before Execute()
      */
-    public void Configure(){
+    public void Configure() {
 
         _serverList.add(new Configuration.ServerEntry(_serverHostname, _serverPort));
 
@@ -68,9 +66,9 @@ public class IRCHandler {
      * Execute IRC Client.
      * If not yet done will call Configure to get connection information
      */
-    public void Execute(){
+    public void Execute() {
 
-        if(null != _configuration){
+        if (null != _configuration) {
             PircBotX myBot = new PircBotX(_configuration);
 
             try {
@@ -78,8 +76,7 @@ public class IRCHandler {
             } catch (IOException | IrcException e) {
                 e.printStackTrace();
             }
-        }
-        else{
+        } else {
             Configure();
             Execute();
         }

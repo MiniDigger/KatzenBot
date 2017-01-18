@@ -12,7 +12,15 @@ import org.pircbotx.hooks.events.MessageEvent;
  */
 public class KatzenBotListener extends ListenerAdapter {
 
+    // Setting instance to zero to prevent cloned messages
+    public static KatzenBotListener instance = null;
     private CommandHandler commandHandler = new CommandHandler();
+
+
+    public KatzenBotListener() {
+        if (instance != null) throw new KatzenBotException("Object already exists");
+        instance = this;
+    }
 
     @Override
     public void onConnect(ConnectEvent event) throws Exception {
@@ -20,14 +28,12 @@ public class KatzenBotListener extends ListenerAdapter {
         commandHandler.initCommands();
     }
 
-
     @Override
     public void onMessage(MessageEvent event) throws Exception {
         String[] args = event.getMessage().split(" ");
         String label = args[0];
         String channel = event.getChannel().getName();
         String sender = event.getUser().getNick();
-
 
 
         //Check message and punish if necessary.
@@ -52,19 +58,10 @@ public class KatzenBotListener extends ListenerAdapter {
         commandHandler.executeCommand(label, args, sender, channel, event);
     }
 
-
     @Override
     public void onListenerException(ListenerExceptionEvent event) throws Exception {
         System.err.println(event.getException().getMessage());
         event.getException().printStackTrace();
-    }
-
-    // Setting instance to zero to prevent cloned messages
-    public static KatzenBotListener instance = null;
-
-    public KatzenBotListener() {
-        if (instance != null) throw new KatzenBotException("Object already exists");
-        instance = this;
     }
 
     class KatzenBotException extends RuntimeException {
