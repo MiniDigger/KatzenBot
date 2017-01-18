@@ -28,17 +28,27 @@ public class KatzenBotListener extends ListenerAdapter {
         String channel = event.getChannel().getName();
         String sender = event.getUser().getNick();
 
+
+
+        //Check message and punish if necessary.
         Moderator modObj = new Moderator();
         Moderator.MessageState state = modObj.isMessageValid(event);
 
         if (state == Moderator.MessageState.blacklist) {
+            //Delete Messsage (to be moved to Moderator class)
             event.getBot().send().message(Main.CHAN, "/timeout " + event.getUser().getNick() + " 1");
+
+            //pass information to user
             event.getBot().send().message(Main.CHAN, "@" + event.getUser().getNick() + " your message contained a blacklisted Word.");
         } else if (state == Moderator.MessageState.caps) {
+            //Delete Messsage (to be moved to Moderator class)
             event.getBot().send().message(Main.CHAN, "/timeout " + event.getUser().getNick() + " 1");
+
+            //pass information to user
             event.getBot().send().message(Main.CHAN, "@" + event.getUser().getNick() + " please do not use so many capital letters.");
         }
 
+        //call command handler with message
         commandHandler.executeCommand(label, args, sender, channel, event);
     }
 
