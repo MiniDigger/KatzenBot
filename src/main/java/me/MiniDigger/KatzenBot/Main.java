@@ -1,7 +1,6 @@
 package me.MiniDigger.KatzenBot;
 
 
-
 import java.util.Arrays;
 
 /**
@@ -29,8 +28,7 @@ public class Main {
             if (args.length == 4) {
                 HOSTNAME = args[3].split(":")[0];
                 PORT = Integer.parseInt(args[3].split(":")[1]);
-            }
-            else{
+            } else {
                 HOSTNAME = "irc.chat.twitch.tv";
                 PORT = 6667;
             }
@@ -56,7 +54,7 @@ public class Main {
 
         System.out.println("Starting IRC Client for user " + USER + " in channel " + CHAN + " on Server " + HOSTNAME + ":" + PORT);
 
-        IRCHandler ircHandlerObj = new IRCHandler(HOSTNAME, PORT,USER, PASS, CHAN);
+        IRCHandler ircHandlerObj = new IRCHandler(HOSTNAME, PORT, USER, PASS, CHAN);
         ircHandlerObj.Execute();
     }
 }

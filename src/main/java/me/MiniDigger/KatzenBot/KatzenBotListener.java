@@ -12,7 +12,15 @@ import org.pircbotx.hooks.events.MessageEvent;
  */
 public class KatzenBotListener extends ListenerAdapter {
 
+    // Setting instance to zero to prevent cloned messages
+    public static KatzenBotListener instance = null;
     private CommandHandler commandHandler = new CommandHandler();
+
+
+    public KatzenBotListener() {
+        if (instance != null) throw new KatzenBotException("Object already exists");
+        instance = this;
+    }
 
     @Override
     public void onConnect(ConnectEvent event) throws Exception {
@@ -26,6 +34,27 @@ public class KatzenBotListener extends ListenerAdapter {
         String label = args[0];
         String channel = event.getChannel().getName();
         String sender = event.getUser().getNick();
+
+
+        //Check message and punish if necessary.
+        Moderator modObj = new Moderator();
+        Moderator.MessageState state = modObj.isMessageValid(event);
+
+        if (state == Moderator.MessageState.blacklist) {
+            //Delete Messsage (to be moved to Moderator class)
+            event.getBot().send().message(Main.CHAN, "/timeout " + event.getUser().getNick() + " 1");
+
+            //pass information to user
+            event.getBot().send().message(Main.CHAN, "@" + event.getUser().getNick() + " your message contained a blacklisted Word.");
+        } else if (state == Moderator.MessageState.caps) {
+            //Delete Messsage (to be moved to Moderator class)
+            event.getBot().send().message(Main.CHAN, "/timeout " + event.getUser().getNick() + " 1");
+
+            //pass information to user
+            event.getBot().send().message(Main.CHAN, "@" + event.getUser().getNick() + " please do not use so many capital letters.");
+        }
+
+        //call command handler with message
         commandHandler.executeCommand(label, args, sender, channel, event);
     }
 
@@ -33,14 +62,6 @@ public class KatzenBotListener extends ListenerAdapter {
     public void onListenerException(ListenerExceptionEvent event) throws Exception {
         System.err.println(event.getException().getMessage());
         event.getException().printStackTrace();
-    }
-
-    // Setting instance to zero to prevent cloned messages
-    public static KatzenBotListener instance = null;
-
-    public KatzenBotListener() {
-        if (instance != null) throw new KatzenBotException("Object already exists");
-        instance = this;
     }
 
     class KatzenBotException extends RuntimeException {
